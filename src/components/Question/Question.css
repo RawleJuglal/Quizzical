@@ -1,0 +1,14 @@
+.--question-container{
+    text-align:center;
+}
+
+.--question-question{
+    font-weight:bold;
+    font-size:1.2rem;
+    color:#293264;
+}
+
+.--question-choices-container{
+    display:flex;
+    justify-content: space-evenly;
+}

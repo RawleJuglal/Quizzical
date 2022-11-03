@@ -2,13 +2,7 @@ import React from 'react'
 import './Question.css'
 
 export default function Question(props){
-    const choicesList = [...props.data.incorrect_answers]
-    choicesList.splice((Math.floor(Math.random() * 4)), 0, props.data.correct_answer)
-
-    const choiceBtn = choicesList.map((val, index)=>{
-        let newVal = convertString(val)
-        return <button className={ "btn option" + (index +1)} key={"option" + (index +1)} id={val}>{newVal}</button>
-    })
+    
 
     function convertString(string){
         return string.replace(/&(lt|gt|quot|#039|amp);/g, function (m, p) { 
@@ -19,12 +13,13 @@ export default function Question(props){
 
     return(
         <div className='--question-container'>
-            <p className='--question-question'>{convertString(props.data.question)}</p> 
-            {/* <ul className='--question-answer-list'>   
-                {choiceBtn}
-            </ul> */}
+            <p className='--question-question'>My Question will go here?</p> 
+
             <div className='--question-choices-container'>
-                {choiceBtn}
+                <button>My Choices #1</button>
+                <button>My Choices #1</button>
+                <button>My Choices #1</button>
+                <button>My Choices #1</button>
             </div>
         </div>
     ) 

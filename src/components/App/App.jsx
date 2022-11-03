@@ -5,9 +5,7 @@ import Quiz from '../Quiz/Quiz'
 import { nanoid } from 'nanoid'
 
 function App() {
-  const [splash, setSplash] = React.useState(true)
-  const [questions, setQuestions] = React.useState([])
-  const [user, setUser] = React.useState({submitted:false})
+  const [quizzer, setQuizzer] = React.useState({mechanics:{isSplash:true, isCompleted:false, isSubmitted:false},questions:[],results:{totalCorrect:0}})
   
   React.useEffect(()=>{
     
@@ -15,45 +13,69 @@ function App() {
 
   },[])
 
+  function convertString(string){
+      return string.replace(/&(lt|gt|quot|#039|amp);/g, function (m, p) { 
+        return (p == "lt") ? "<" : (p == "gt") ? ">" : (p == "#039") ? "'" : ((p == "amp") ? "&" : '"');
+      });
+    
+  }
+
   function getNewQuiz(){
     fetch('https://opentdb.com/api.php?amount=5&type=multiple')
       .then(res => res.json())
       .then(data =>{
-        return setQuestions(()=>{
-         return data.results.map((ele)=>{
-            return {...ele, id: nanoid()}
+        let questionArr = data.results.map((ele)=>{
+          let incorrectArr = ele.incorrect_answers.map((ans)=>{
+            return {
+              badID: nanoid(),
+              answer:convertString(ans)
+            }
           })
+
+          return {
+            questionID:nanoid(),
+            question:convertString(ele.question),
+            correctAnswer:{cid:nanoid(), answer:convertString(ele.correct_answer)},
+            incorrectAnswers:incorrectArr,
+            userChoice:''
+          }
+        }) 
+        setQuizzer((prevQuizzer)=>{
+          return {...prevQuizzer, questions:questionArr}
         })
       })
   }
 
   function handleClick(){
-    setSplash(()=> !splash)
+    setQuizzer((prevQuizzer)=>{
+      return {...prevQuizzer, mechanics:{...prevQuizzer.mechanics, isSplash: !prevQuizzer.mechanics.isSplash}}
+    })
   }
 
   function handleSubmit(event){
     event.preventDefault();
-    setUser((prevUser)=>{
-      return {...prevUser, submitted: !prevUser.submitted}
-    })
+    console.log(`handle submit`)
+    // setUser((prevUser)=>{
+    //   return {...prevUser, submitted: !prevUser.submitted}
+    // })
   }
 
   function handleNewQuiz(event){
     event.preventDefault();
-    getNewQuiz();
-    setUser((prevUser)=>{
-      return {...prevUser, submitted: !prevUser.submitted}
-    })
+    console.log(`handle new quiz`)
+    // getNewQuiz();
+    // setUser((prevUser)=>{
+    //   return {...prevUser, submitted: !prevUser.submitted}
+    // })
   }
 
   return (
     <div className="--app-app-container">
-      {splash ? 
+      {quizzer.mechanics.isSplash ? 
         <Splash toggle={handleClick}/> : 
         <Quiz 
-          data={questions} 
-          clickSubmit={handleSubmit} 
-          submitted={user.submitted}
+          game={quizzer} 
+          clickSubmit={handleSubmit}
           newQuiz={handleNewQuiz}
         />}
     </div>

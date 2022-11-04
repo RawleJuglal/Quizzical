@@ -2,24 +2,26 @@ import React from 'react'
 import './Question.css'
 
 export default function Question(props){
+    const selectedStyle = {backgroundColor:'green'}
+    const choicesList = [...props.question.incorrectAnswers]
+    choicesList.splice(Math.floor(Math.random()*4),0,props.question.correctAnswer)
+    const choicesBtns = choicesList.map((ele,index, array)=>{
+        return <button 
+                    style={ele.isSelected ? selectedStyle : {backgroundColor:'buttonface'}} 
+                    key={'badID' in ele ? ele.badID : ele.cid}
+                    name={props.question.questionID}
+                    id={'badID' in ele ? ele.badID : ele.cid} 
+                    onClick={(event, id)=>{props.toggleSelection(event, event.target.id)}}
+                    >{ele.answer}</button>
+    })
     
-
-    function convertString(string){
-        return string.replace(/&(lt|gt|quot|#039|amp);/g, function (m, p) { 
-          return (p == "lt") ? "<" : (p == "gt") ? ">" : (p == "#039") ? "'" : ((p == "amp") ? "&" : '"');
-        });
-      
-    }
 
     return(
         <div className='--question-container'>
-            <p className='--question-question'>My Question will go here?</p> 
+            <p className='--question-question' id={props.question.questionID}>{props.question.question}</p> 
 
             <div className='--question-choices-container'>
-                <button>My Choices #1</button>
-                <button>My Choices #1</button>
-                <button>My Choices #1</button>
-                <button>My Choices #1</button>
+                {choicesBtns}
             </div>
         </div>
     ) 

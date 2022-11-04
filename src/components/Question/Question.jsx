@@ -2,10 +2,11 @@ import React from 'react'
 import './Question.css'
 
 export default function Question(props){
-    const selectedStyle = {backgroundColor:'green'}
-    const choicesList = [...props.question.incorrectAnswers]
-    choicesList.splice(Math.floor(Math.random()*4),0,props.question.correctAnswer)
-    const choicesBtns = choicesList.map((ele,index, array)=>{
+    const selectedStyle = {backgroundColor:'pink'}
+    // const choicesList = [...props.question.incorrectAnswers]
+    // choicesList.splice(Math.floor(Math.random()*4),0,props.question.correctAnswer)
+
+    const choicesBtns = props.question.allAnswers.map((ele,index, array)=>{
         return <button 
                     style={ele.isSelected ? selectedStyle : {backgroundColor:'buttonface'}} 
                     key={'badID' in ele ? ele.badID : ele.cid}

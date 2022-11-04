@@ -4,7 +4,7 @@ import Question from '../Question/Question'
 
 export default function Quiz(props){
     const questionList = props.game.questions.map((ele)=>{
-        return <Question key={ele.questionID} question={ele} toggleSelection={props.clickBtn}/>
+        return <Question key={ele.questionID} mechanics={props.game.mechanics} question={ele} toggleSelection={props.clickBtn}/>
     })
 
     return(

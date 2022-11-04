@@ -8,9 +8,7 @@ function App() {
   const [quizzer, setQuizzer] = React.useState({mechanics:{isSplash:true, isCompleted:false, isSubmitted:false},questions:[],results:{totalCorrect:0}})
   
   React.useEffect(()=>{
-    
     getNewQuiz()
-
   },[])
 
   function convertString(string){
@@ -32,13 +30,18 @@ function App() {
               isSelected:false
             }
           })
+          let correctObject = {cid:nanoid(), answer:convertString(ele.correct_answer), isSelected:false}
+          let allAnswersArr = [...incorrectArr]
+          allAnswersArr.splice(Math.floor(Math.random()*4),0,correctObject)
+
 
           return {
             questionID:nanoid(),
             question:convertString(ele.question),
-            correctAnswer:{cid:nanoid(), answer:convertString(ele.correct_answer), isSelected:false},
-            incorrectAnswers:incorrectArr,
-            userChoice:'true'
+            // correctAnswer:correctObject,
+            // incorrectAnswers:incorrectArr,
+            userChoice:false,
+            allAnswers:allAnswersArr
           }
         }) 
         setQuizzer((prevQuizzer)=>{
@@ -55,43 +58,38 @@ function App() {
 
   function handleBtnClick(event, clickID){
     event.preventDefault();
+    // console.log(`handle button click`)
 
     //find the questionID index
     let holdQuestion = quizzer.questions.findIndex((val)=>{
       return val.questionID == event.target.name
     })
-      //look to see if correctAnswers.cid matches clickID
-    if(quizzer.questions[holdQuestion].correctAnswer.cid == clickID){
-      let items = [...quizzer.questions]
-      let item = {...quizzer.questions[holdQuestion]}
-      let ite = {...quizzer.questions[holdQuestion].correctAnswer}
-      ite.isSelected = !quizzer.questions[holdQuestion].correctAnswer.isSelected
-      item.correctAnswer = ite;
-      items[holdQuestion] = item;
-      console.log(`F`)
-      console.log(items)
-
-      
-    } else {
-      console.log(`incorrect${clickID}`)
-    }
-      
-          //if they match setQuizzer flip correctAnswer.cid &&
-          //setQuizzer all incorrectAnswer.isSelected to false
-      //else
-          //look for the incorrectAnswer index that clickID matches
-              //setQuizzer all flip incorrectAnswer.isSelected to false
-              //setQuizzer correctAnswer.isSelected to false
-              //setQuizzer incorrectAnswer[0].isSelected flipped
-    // setQuizzer((prevQuizzer)=>{
-    //   return {...prevQuizzer, questions:[...prevQuizzer.questions, ]}
-    // })
+    let items = [...quizzer.questions]
+    let item = {...quizzer.questions[holdQuestion]}
+    let allAnswersItem = [...quizzer.questions[holdQuestion].allAnswers]
+    let ite = allAnswersItem.map((ele)=>{
+      return ele.badID == clickID || ele.cid == clickID ? {...ele, isSelected:true} : {...ele, isSelected:false}
+    })
+    item.allAnswers = ite;
+    item.userChoice = true;
+    items[holdQuestion] = item;
+    setQuizzer((prevQuizzer)=>{
+      return {...prevQuizzer, questions:items}
+    }) 
   }
 
   function handleSubmit(event){
     event.preventDefault();
     console.log(`handle submit`)
-    // checkForCompletion()
+      if(checkForCompletion()){
+        console.log(`completion was true`)
+        setQuizzer((prevQuizzer)=>{
+          let mechObj = {...prevQuizzer, isCompleted:true, isSubmitted:true}
+          return {...prevQuizzer, mechanics:mechObj}
+        })
+      } else {
+        console.log(`finished completion it was false`)
+      }   
     // console.log(quizzer)
     // quizzer.mechanics.isCompleted ? 
     //   setQuizzer((prevQuizzer)=>{
@@ -101,11 +99,12 @@ function App() {
 
   function checkForCompletion(){
     console.log('check completion')
-    // quizzer.questions.every(o => o.userChoice !== '') ? 
-    //     setQuizzer((prevQuizzer)=>{
-    //       console.log(`all userchoice not empty`)
-    //       return {...prevQuizzer, mechanics:{...prevQuizzer.mechanics, isCompleted: !prevQuizzer.mechanics.isCompleted}}
-    //     }): false
+    if(quizzer.questions.every(o => o.userChoice == true)){
+      return true
+    } else {
+      return false
+    }
+       
   }
   
 

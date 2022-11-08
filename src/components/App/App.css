@@ -1,6 +1,16 @@
+.btn{
+    padding:10px 20px;
+    border-radius:8px;
+    font-family:'Inter', sans-serif;
+    font-size:.8rem;
+    color:#4D5B9E;
+    background-color:transparent;
+    border-color:#4D5B9E;
+}
+
 .--app-app-container{
-    height:100vh;
     display:flex;
+    flex-direction: column;
     justify-content: space-around;
     align-items: center;
 }

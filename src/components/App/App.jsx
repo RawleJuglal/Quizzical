@@ -40,7 +40,7 @@ function App() {
             question:convertString(ele.question),
             // correctAnswer:correctObject,
             // incorrectAnswers:incorrectArr,
-            userChoice:false,
+            userChoice:'',
             allAnswers:allAnswersArr
           }
         }) 
@@ -71,7 +71,7 @@ function App() {
       return ele.badID == clickID || ele.cid == clickID ? {...ele, isSelected:true} : {...ele, isSelected:false}
     })
     item.allAnswers = ite;
-    item.userChoice = true;
+    item.userChoice = clickID;
     items[holdQuestion] = item;
     setQuizzer((prevQuizzer)=>{
       return {...prevQuizzer, questions:items}
@@ -82,39 +82,48 @@ function App() {
     event.preventDefault();
     console.log(`handle submit`)
       if(checkForCompletion()){
-        console.log(`completion was true`)
         setQuizzer((prevQuizzer)=>{
+          let resultObj = tallyCorrect()
           let mechObj = {...prevQuizzer, isCompleted:true, isSubmitted:true}
-          return {...prevQuizzer, mechanics:mechObj}
+          return {...prevQuizzer, mechanics:mechObj, results:resultObj}
         })
       } else {
         console.log(`finished completion it was false`)
       }   
-    // console.log(quizzer)
-    // quizzer.mechanics.isCompleted ? 
-    //   setQuizzer((prevQuizzer)=>{
-    //     return {...prevQuizzer, mechanics:{...prevQuizzer.mechanics, isSubmitted: !prevQuizzer.mechanics.isSubmitted}}
-    //   }) : console.log('can not submit')
   }    
 
   function checkForCompletion(){
     console.log('check completion')
-    if(quizzer.questions.every(o => o.userChoice == true)){
+    if(quizzer.questions.every(o => o.userChoice.length !== 0)){
       return true
     } else {
       return false
     }
        
   }
+
+  function tallyCorrect(){
+    let numberCorrect=0;
+    quizzer.questions.map((ele)=>{
+      ele.allAnswers.map((val)=>{
+        if(val.hasOwnProperty('cid') && val.cid == ele.userChoice ){
+          numberCorrect++;
+        }
+      })
+    })
+    return {...quizzer.results, totalCorrect:numberCorrect}
+  }
   
 
   function handleNewQuiz(event){
     event.preventDefault();
     console.log(`handle new quiz`)
-    // getNewQuiz();
-    // setUser((prevUser)=>{
-    //   return {...prevUser, submitted: !prevUser.submitted}
-    // })
+    let mechanicObj = {isSplash:false, isCompleted:false, isSubmitted:false}
+    let resultsObj = {totalCorrect:0}
+    getNewQuiz();
+    setQuizzer((prevQuizzer)=>{
+      return {...prevQuizzer, mechanics:mechanicObj, results:resultsObj}
+    })
   }
 
   return (

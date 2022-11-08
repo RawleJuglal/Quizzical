@@ -1,5 +1,7 @@
 .--question-container{
     text-align:center;
+    padding-bottom:20px;
+    border-bottom:1px solid #D6DBF5;
 }
 
 .--question-question{
@@ -11,4 +13,5 @@
 .--question-choices-container{
     display:flex;
     justify-content: space-evenly;
+    flex-wrap:wrap;
 }

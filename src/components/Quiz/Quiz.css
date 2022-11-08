@@ -1,3 +1,23 @@
+.--quiz-form-container{
+    height:100vh;
+}
+
 .--quiz-title{
     color:red;
+}
+
+.--quiz-form{
+    display:flex;
+    flex-direction: column;
+    row-gap:25px;
+}
+
+.--quiz-form-results{
+    display:flex;
+    justify-content: space-evenly;
+}
+
+.--quiz-submit{
+    background-color:#4D5B9E;
+    color:white;
 }

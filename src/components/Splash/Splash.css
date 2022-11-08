@@ -1,7 +1,13 @@
 .--splash-splash-container{
     text-align:center;
+    height:100vh 
 }
 
 .--splash-title{
     color:green;
+}
+
+.--splash-btn-start{
+    background-color:#4D5B9E;
+    color:white;
 }

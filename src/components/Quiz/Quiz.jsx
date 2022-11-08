@@ -9,9 +9,13 @@ export default function Quiz(props){
 
     return(
         <div className='--quiz-form-container'>
-            <form onSubmit={!props.game.mechanics.isSubmitted ? props.clickSubmit : props.newQuiz}>
+            <form className='--quiz-form' onSubmit={!props.game.mechanics.isSubmitted ? props.clickSubmit : props.newQuiz}>
                 {questionList}
-                {props.game.mechanics.isSubmitted ? <button>Take New Quiz</button> : <button onClick={props.clickSubmit} type="submit">Submit</button>}
+                <div className='--quiz-form-results'>
+                    {props.game.mechanics.isCompleted && <p>You scored {props.game.results.totalCorrect}/5 correct answers</p>}
+                    {props.game.mechanics.isSubmitted ? <button className='--quiz-submit btn'>Take New Quiz</button> : <button className='--quiz-submit btn' onClick={props.clickSubmit} type="submit">Submit</button>}
+                </div>
+                
             </form>
         </div>
     )
